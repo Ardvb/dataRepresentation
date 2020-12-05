@@ -1,0 +1,260 @@
+<html>
+    <head>
+        <title> View Whiskeys</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+       
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <h1>Whiskeys</h1>
+        <div> <button id="showCreateButton" onclick="showCreate()">Add a new whiskey to the database</button></div>
+        <div>
+            <table class="table" id="whiskeyTable">
+                <tr>
+                        <th>id</th>
+                        <th>Name</th>
+                        <th>Distillery</th>
+                        <th>Age</th>
+                        <th>Price</th>
+                        <th>Country_id</th>
+                </tr>
+                
+            </table>
+        </div>
+        <div id='createUpdateForm' style="display: none">
+                <h2><span id="createLabel">Create a</span> <span id="updateLabel">update</span> Whiskey</h2>
+                <input type="hidden" name="id"/>
+                Name <input type="text" name="Name" /><br/>
+                Distillery <input type="text" name="Distillery"/> <br/>
+                Age <input type="number" name="Age"/> <br/>
+                Price <input type="number" name="Price"/> <br/>
+                Country_id <input type="number" name="Country_id"/> <br/>
+                <span><button id="doCreateButton" onclick="doCreate()">Create</button></span>
+                <span><button id="doUpdateButton" onclick="doUpdate()">Update</button></span>
+        </div>
+    </body>
+    <script>
+    function showCreate(){
+        document.getElementById('showCreateButton').style.display="none"
+        document.getElementById('whiskeyTable').style.display="none"
+        document.getElementById('createUpdateForm').style.display="block"
+
+        document.getElementById('createLabel').style.display="inline"
+        document.getElementById('updateLabel').style.display="none"
+
+        document.getElementById('doCreateButton').style.display="block"
+        document.getElementById('doUpdateButton').style.display="none"
+
+    }
+    function showViewAll(){
+        document.getElementById('showCreateButton').style.display="block"
+        document.getElementById('whiskeyTable').style.display="block"
+        document.getElementById('createUpdateForm').style.display="none"
+    }
+    function showUpdate(buttonElement){
+        document.getElementById('showCreateButton').style.display="none"
+        document.getElementById('whiskeyTable').style.display="none"
+        document.getElementById('createUpdateForm').style.display="block"
+
+        document.getElementById('createLabel').style.display="none"
+        document.getElementById('updateLabel').style.display="inline"
+
+        document.getElementById('doCreateButton').style.display="none"
+        document.getElementById('doUpdateButton').style.display="block"
+
+
+        var rowElement = buttonElement.parentNode.parentNode
+        
+        
+        var whiskey = getWhiskeyFromRow(rowElement)
+        populateFormWithWhiskey(whiskey)
+    }
+    function doCreate(){
+        var form = document.getElementById('createUpdateForm')
+
+        var whiskey = {}
+       
+        whiskey.Name = form.querySelector('input[name="Name"]').value
+        whiskey.Author = form.querySelector('input[name="Distillery"]').value
+        whiskey.Age = form.querySelector('input[name="Age"]').value
+        whiskey.Price = form.querySelector('input[name="Price"]').value
+        console.log(JSON.stringify(whiskey))
+        createWhiskeyAjax(whiskey)
+        
+        
+    }
+    function doUpdate(){
+        var whiskey = getWhiskeyFromForm();
+        var rowElement = document.getElementById(whiskey.id);
+        updateWhiskeyAjax(whiskey);
+        setWhiskeyInRow(rowElement,whiskey);
+       
+        clearForm();
+        showViewAll();
+    }
+    function doDelete(r){
+        var tableElement = document.getElementById('whiskeyTable');
+        var rowElement = r.parentNode.parentNode;
+        var index = rowElement.rowIndex;
+        deleteWhiskeyAjax(rowElement.getAttribute("id"));
+        tableElement.deleteRow(index);
+    }
+    function addWhiskeyToTable(whiskey){
+        var tableElement = document.getElementById('whiskeyTable')
+        var rowElement = tableElement.insertRow(-1)
+        rowElement.setAttribute('id',whiskey.id)
+        var cell1 = rowElement.insertCell(0);
+        cell1.innerHTML = whiskey.id
+        var cell2 = rowElement.insertCell(1);
+        cell2.innerHTML = whiskey.Name
+        var cell3 = rowElement.insertCell(2);
+        cell3.innerHTML = whiskey.Distillery
+        var cell4 = rowElement.insertCell(3);
+        cell4.innerHTML = whiskey.Age
+        var cell5 = rowElement.insertCell(4);
+        cell4.innerHTML = whiskey.Price
+        var cell6 = rowElement.insertCell(5);
+        cell4.innerHTML = whiskey.Country_id
+        var cell7 = rowElement.insertCell(6);
+        cell5.innerHTML = '<button onclick="showUpdate(this)">Update</button>'
+        var cell8 = rowElement.insertCell(7);
+        cell6.innerHTML = '<button onclick=doDelete(this)>delete</button>'
+
+    }
+
+    function clearForm(){
+        var form = document.getElementById('createUpdateForm')
+
+        form.querySelector('input[name="Name"]').value=''
+        form.querySelector('input[name="Distillery"]').value=''
+        form.querySelector('input[name="Age"]').value=''
+        form.querySelector('input[name="Price"]').value=''
+        form.querySelector('input[name="Country_id"]').value=''
+    }
+    function getWhiskeyFromRow(rowElement){
+        var car ={}
+        whiskey.id  = rowElement.getAttribute('id')
+        whiskey.Name = rowElement.cells[1].firstChild.textContent
+        whiskey.Distillery = rowElement.cells[2].firstChild.textContent
+        whiskey.Age = parseInt(rowElement.cells[3].firstChild.textContent,10)
+        whiskey.Price = parseInt(rowElement.cells[3].firstChild.textContent,10)
+        whiskey.Country_id = parseInt(rowElement.cells[3].firstChild.textContent,10)
+        return whiskey
+    }
+    function setWhiskeyInRow(rowElement, whiskey){
+        rowElement.cells[0].firstChild.textContent= whiskey.id  
+        rowElement.cells[1].firstChild.textContent= whiskey.Name
+        rowElement.cells[2].firstChild.textContent= whiskey.Distillery
+        rowElement.cells[3].firstChild.textContent= whiskey.Age
+        rowElement.cells[4].firstChild.textContent= whiskey.Price 
+        rowElement.cells[5].firstChild.textContent= whiskey.Country_id
+
+    }
+    function populateFormWithWhiskey(whiskey){
+        var form = document.getElementById('createUpdateForm')
+        form.querySelector('input[name="id"]').disabled = true
+
+        form.querySelector('input[name="id"]').value  = whiskey.id
+        form.querySelector('input[name="Name"]').value= whiskey.Name
+        form.querySelector('input[name="Distillery"]').value= whiskey.Distillery
+        form.querySelector('input[name="Age"]').value= whiskey.Age
+        form.querySelector('input[name="Price"]').value= whiskey.Price
+        form.querySelector('input[name="Country_id"]').value= whiskey.Country_id
+        return whiskey
+    }
+    function getWhiskeyFromForm(){
+        var form = document.getElementById('createUpdateForm')
+        var whiskey = {}
+        whiskey.id = form.querySelector('input[name="id"]').value
+        whiskey.Name = form.querySelector('input[name="Name"]').value
+        whiskey.Distillery = form.querySelector('input[name="Distillery"]').value
+        whiskey.Age= parseInt(form.querySelector('input[name="Age"]').value,10)
+        whiskey.Price= parseInt(form.querySelector('input[name="Price"]').value,10)
+        whiskey.Country_id= parseInt(form.querySelector('input[name="Country_id"]').value,10)
+
+        
+        console.log(JSON.stringify(whiskey))
+        return whiskey
+    }
+    function getAllAjax(){
+        $.ajax({
+            "url": "http://127.0.0.1:5000/whiskeys",
+            "method":"GET",
+            "data":"",
+            "dataType": "JSON",
+            "success":function(result){
+                
+                for (whiskey of result){
+                    addWhiskeyToTable(whiskey);
+                }
+                
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+
+    }
+    function createWhiskeyAjax(whiskey){
+        
+        console.log(JSON.stringify(whiskey));
+        $.ajax({
+            "url": "http://127.0.0.1:5000/whiskeys",
+            "method":"POST",
+            "data":JSON.stringify(whiskey),
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+               
+                whiskey.id = result.id
+                addWhiskeyToTable(whiskey)
+                clearForm()
+                showViewAll()
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+    function updateWhiskeyAjax(whiskey){
+        
+        console.log(JSON.stringify(whiskey));
+        $.ajax({
+            "url": "http://127.0.0.1:5000/whiskeys/"+encodeURI(whiskey.id),
+            "method":"PUT",
+            "data":JSON.stringify(whiskey),
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+              
+                  
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+    function deleteWhiskeyAjax(id){
+        
+        
+        $.ajax({
+            "url": "http://127.0.0.1:5000/whiskeys/"+encodeURI(id),
+            "method":"DELETE",
+            "data":"",
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+                
+                  
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+    getAllAjax();
+  
+
+    
+    </script>
+</html>
