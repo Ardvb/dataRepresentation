@@ -1,14 +1,15 @@
 import mysql.connector
 from mysql.connector import cursor
+import dbconfig as cfg
 
 class WhiskeyDAO:
     db = ""
     def __init__(self):
         self.db = mysql.connector.connect(
-            host = 'localhost',
-            user= 'root',
-            password = 'Nedujwopse1995',
-            database ='whiskeys'
+            host = cfg.mysql["host"],
+            user= cfg.mysql["username"],
+            password = cfg.mysql["password"],
+            database = cfg.mysql["database"]
         )
         print ("connection made")
 
