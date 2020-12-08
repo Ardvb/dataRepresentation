@@ -15,7 +15,7 @@ class WhiskeyDAO:
 
     def create(self, values):
         cursor = self.db.cursor()
-        sql="insert into whiskey (name, distillery, age, price, country_id) values (%s, %s,%s, %s,%s)"
+        sql="insert into whiskey (codenr, name, country, age, price) values (%s, %s,%s, %s,%s)"
         cursor.execute(sql, values)
         self.db.commit()
         return cursor.lastrowid
@@ -33,10 +33,10 @@ class WhiskeyDAO:
 
         return returnArray
 
-    def findById(self, id):
+    def findById(self, codenr):
         cursor = self.db.cursor()
-        sql = 'select * from whiskey where id = %s'
-        values = [ id ]
+        sql = 'select * from whiskey where codenr = %s'
+        values = [ codenr ]
         cursor.execute(sql, values)
         result = cursor.fetchone()
         return self.convertToDict(result)
@@ -44,30 +44,30 @@ class WhiskeyDAO:
 
     def update(self, whiskey):
        cursor = self.db.cursor()
-       sql = "update whiskey set name = %s, distillery = %s, age = %s, price=%s, country_id=%s where id = %s"
+       sql = "update whiskey set codenr = %s, name = %s, country = %s, age = %s, price = %s where codenr = %s"
        values = [
-            whiskey["id"],
+            whiskey["codenr"],
             whiskey["name"],
-            whiskey["distillery"],
+            whiskey["country"],
             whiskey["age"],
             whiskey["price"],
-            whiskey["country_id"]
+            
        ]
        cursor.execute(sql, values)
        self.db.commit()
        return whiskey
 
-    def delete(self, id):
+    def delete(self, codenr):
        cursor = self.db.cursor()
-       sql = 'delete from books where id = %s'
-       values = [id]
+       sql = 'delete from whiskey where codenr = %s'
+       values = [codenr]
        cursor.execute(sql, values)
        
        return {}
 
 
     def convertToDict(self, result):
-        colnames = ["id", "name", "distillery", "age", "price", "country_id"]
+        colnames = ["codenr", "name", "country", "age", "price"]
         whiskey = {}
 
         if result:
