@@ -13,12 +13,19 @@ class WhiskeyDAO:
         )
         print ("connection made")
 
-    def create(self, values):
+    def create(self, whiskey):
         cursor = self.db.cursor()
         sql="insert into whiskey (codenr, name, country, age, price) values (%s, %s,%s, %s,%s)"
+        values = [
+            whiskey['codenr'],
+            whiskey['name'],
+            whiskey['country'],
+            whiskey['age'],
+            whiskey['price'],
+        ]
         cursor.execute(sql, values)
         self.db.commit()
-        return cursor.lastrowid
+        cursor.close()
 
     def getAll(self):
         cursor = self.db.cursor()
@@ -44,18 +51,20 @@ class WhiskeyDAO:
 
     def update(self, whiskey):
        cursor = self.db.cursor()
-       sql = "update whiskey set codenr = %s, name = %s, country = %s, age = %s, price = %s where codenr = %s"
-       values = [
-            whiskey["codenr"],
+       sql = "update whiskey set name = %s, country = %s, age = %s, price = %s where codenr = %s"
+       values = (
             whiskey["name"],
             whiskey["country"],
             whiskey["age"],
             whiskey["price"],
-            
-       ]
+            whiskey["codenr"]
+        )
        cursor.execute(sql, values)
        self.db.commit()
+       cursor.close()
        return whiskey
+      
+       
 
     def delete(self, codenr):
        cursor = self.db.cursor()

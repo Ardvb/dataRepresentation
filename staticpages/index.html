@@ -12,25 +12,21 @@
 
     <style>
 
-
         body {
             background-image: url("https://images.pexels.com/photos/82256/pexels-photo-82256.jpeg?cs=srgb&dl=pexels-tbee-82256.jpg&fm=jpg");
         }
 
-
     </style>
 
 
-   
     <body> 
 
     
     <center>
         <h1> Ard's Whiskeystore </h1>
         <div> 
-            <button id="showCreateButton" onclick="showCreate()"<button type="button" class="btn btn-info">Add a new whiskey to the database</button>
-            <button id="showUpdateButton" onclick="showUpdate()"<button type="button" class="btn btn-info">Update a whiskey to the database</button>
-            <button id="showDeleteButton" onclick="showCreate()"<button type="button" class="btn btn-info">Delete a whiskey from the database</button>
+            <h2><button id="showCreateButton" onclick="showCreate()"<button type="button" class="btn btn-info">Add a new whiskey to the database</button></h2>
+            
         </div>
 
         <div>
@@ -41,6 +37,9 @@
                         <th>Country</th>
                         <th>Age</th>
                         <th>Price</th>
+                        <th> Click to update row</th>
+                        <th> Click to delete row</th>
+
                         
                 </tr>
                 
@@ -55,22 +54,24 @@
                     
                                     <tr>
                                         <td>Codenr</td>
-                                        <td><input type="text" name="Codenr"/></td>
+                                        <td><input type="text" name="codenr"/></td>
                                     </tr>
                                      <tr>
-                                        <td>Name</td> <td><input type="text" name="Name"/></td>
+                                        <td>Name</td> <td><input type="text" name="name"/></td>
                                     </tr>
                                     <tr> 
-                                        <td>Country</td> <td><input type="number" name="Country"/></td>
+                                        <td>Country</td> <td><input type="text" name="country"/></td>
                                     </tr>
                                     <tr>    
-                                        <td>Age</td> <td><input type="number" name="Age"/></td>
+                                        <td>Age</td> <td><input type="number" name="age"/></td>
                                     </tr>
                                     <tr>    
-                                        <td>Price</td> <td><input type="number" name="Price"/></td>
+                                        <td>Price</td> <td><input type="number" name="price"/></td>
+                                        
                                     </tr>
                                     
                                     <tr>
+                                    
                                         <td><button id="doCreateButton" onclick="doCreate()"<button type="button" class="btn btn-info">Create</button>
                                         <td><button id="doUpdateButton" onclick="doUpdate()"<button type="button" class="btn btn-info">Update</button>
                                         <button id="mainPageButton" onclick="history.go(0)"<button type="button" class="btn btn-warning">Back to home page</button> 
@@ -125,11 +126,11 @@
 
         var whiskey = {}
        
-        whiskey.Codenr = form.querySelector('input[name="Codenr"]').value
-        whiskey.Name = form.querySelector('input[name="Name"]').value
-        whiskey.Country = form.querySelector('input[name="Country"]').value
-        whiskey.Age = form.querySelector('input[name="Age"]').value
-        whiskey.Price = form.querySelector('input[name="Age"]').value
+        whiskey.codenr = form.querySelector('input[name="codenr"]').value
+        whiskey.name = form.querySelector('input[name="name"]').value
+        whiskey.country = form.querySelector('input[name="country"]').value
+        whiskey.age = form.querySelector('input[name="age"]').value
+        whiskey.price = form.querySelector('input[name="price"]').value
         console.log(JSON.stringify(whiskey))
         createWhiskeyAjax(whiskey)
         
@@ -156,15 +157,15 @@
         var rowElement = tableElement.insertRow(-1)
         rowElement.setAttribute('codenr',whiskey.codenr)
         var cell1 = rowElement.insertCell(0);
-        cell1.innerHTML = whiskey.Codenr
+        cell1.innerHTML = whiskey.codenr
         var cell2 = rowElement.insertCell(1);
-        cell2.innerHTML = whiskey.Name
+        cell2.innerHTML = whiskey.name
         var cell3 = rowElement.insertCell(2);
-        cell3.innerHTML = whiskey.Country
+        cell3.innerHTML = whiskey.country
         var cell4 = rowElement.insertCell(3);
-        cell4.innerHTML = whiskey.Age
+        cell4.innerHTML = whiskey.age
         var cell5 = rowElement.insertCell(4);
-        cell5.innerHTML = whiskey.Price
+        cell5.innerHTML = whiskey.price
         var cell6 = rowElement.insertCell(5);
         cell6.innerHTML = '<button onclick="showUpdate(this)">Update</button>'
         var cell7 = rowElement.insertCell(6);
@@ -175,47 +176,47 @@
     function clearForm(){
         var form = document.getElementById('createUpdateForm')
 
-        form.querySelector('input[name="Codenr"]').value=''
-        form.querySelector('input[name="Name"]').value=''
-        form.querySelector('input[name="Country"]').value=''
-        form.querySelector('input[name="Age"]').value=''
-        form.querySelector('input[name="Price"]').value=''
+        form.querySelector('input[name="codenr"]').value=''
+        form.querySelector('input[name="name"]').value=''
+        form.querySelector('input[name="country"]').value=''
+        form.querySelector('input[name="age"]').value=''
+        form.querySelector('input[name="price"]').value=''
     }
     function getWhiskeyFromRow(rowElement){
         var car ={}
-        whiskey.Codenr  = rowElement.getAttribute('codenr')
-        whiskey.Name = rowElement.cells[1].firstChild.textContent
-        whiskey.Country = rowElement.cells[2].firstChild.textContent
-        whiskey.Age = parseInt(rowElement.cells[3].firstChild.textContent,10)
-        whiskey.Price = parseInt(rowElement.cells[4].firstChild.textContent,10)
+        whiskey.codenr  = rowElement.getAttribute('codenr')
+        whiskey.mame = rowElement.cells[1].firstChild.textContent
+        whiskey.country = rowElement.cells[2].firstChild.textContent
+        whiskey.age = parseInt(rowElement.cells[3].firstChild.textContent,10)
+        whiskey.price = parseInt(rowElement.cells[4].firstChild.textContent,10)
         return whiskey
     }
     function setWhiskeyInRow(rowElement, whiskey){
         rowElement.cells[0].firstChild.textContent= whiskey.codenr
-        rowElement.cells[1].firstChild.textContent= whiskey.Name
-        rowElement.cells[2].firstChild.textContent= whiskey.DCountry
-        rowElement.cells[3].firstChild.textContent= whiskey.Age
-        rowElement.cells[4].firstChild.textContent= whiskey.Price 
+        rowElement.cells[1].firstChild.textContent= whiskey.name
+        rowElement.cells[2].firstChild.textContent= whiskey.country
+        rowElement.cells[3].firstChild.textContent= whiskey.age
+        rowElement.cells[4].firstChild.textContent= whiskey.price 
 
     }
     function populateFormWithWhiskey(whiskey){
         var form = document.getElementById('createUpdateForm')
-        form.querySelector('input[name="Codenr"]').value  = whiskey.codenr
-        form.querySelector('input[name="Name"]').value= whiskey.Name
-        form.querySelector('input[name="Country"]').value= whiskey.Country
-        form.querySelector('input[name="Age"]').value= whiskey.Age
-        form.querySelector('input[name="Price"]').value= whiskey.Price
+        form.querySelector('input[name="codenr"]').value  = whiskey.codenr
+        form.querySelector('input[name="name"]').value= whiskey.name
+        form.querySelector('input[name="country"]').value= whiskey.country
+        form.querySelector('input[name="age"]').value= whiskey.age
+        form.querySelector('input[name="price"]').value= whiskey.price
         
         return whiskey
     }
     function getWhiskeyFromForm(){
         var form = document.getElementById('createUpdateForm')
         var whiskey = {}
-        whiskey.Codenr = form.querySelector('input[name="Codenr"]').value
-        whiskey.Name = form.querySelector('input[name="Name"]').value
-        whiskey.Country = form.querySelector('input[name="Country"]').value
-        whiskey.Age= parseInt(form.querySelector('input[name="Age"]').value,10)
-        whiskey.Price= parseInt(form.querySelector('input[name="Price"]').value,10)
+        whiskey.codenr = form.querySelector('input[name="codenr"]').value
+        whiskey.name = form.querySelector('input[name="name"]').value
+        whiskey.country = form.querySelector('input[name="country"]').value
+        whiskey.age= parseInt(form.querySelector('input[name="age"]').value,10)
+        whiskey.price= parseInt(form.querySelector('input[name="price"]').value,10)
 
         
         console.log(JSON.stringify(whiskey))
@@ -297,9 +298,8 @@
             }
         });
     }
-    getAllAjax();
+    getAllAjax()
   
 
-    
     </script>
 </html>

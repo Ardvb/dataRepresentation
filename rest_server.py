@@ -12,10 +12,10 @@ def index():
 def getAll():
     results = WhiskeyDAO.getAll()
     return jsonify(results)
-# find By id
-@app.route('/whiskeys/<int:id>')
-def findById(id):
-    foundWhiskey = WhiskeyDAO.findById(id)
+# find By id (codenr)
+@app.route('/whiskeys/<int:codenr>')
+def findById(codenr):
+    foundWhiskey = WhiskeyDAO.findById(codenr)
     return jsonify(foundWhiskey)
 
 # create
@@ -26,52 +26,51 @@ def create():
     if not request.json:
         abort(400)
 
-    whiskeys = {
+    whiskey = {
+        "codenr": request.json["codenr"],
         "name": request.json["name"],
-        "distillery": request.json["distillery"],
+        "country": request.json["country"],
         "age": request.json["age"],
-        "price": request.json["price"],
-        "country_id": request.json["country_id"]
+        "price": request.json["price"]
     }
     
     #values =(whiskeys['name'],whiskeys['distillery'],whiskeys["age"], whiskeys["price"], whiskeys["country_id"])
     #newId = WhiskeyDAO.create(values)
     #whiskeys['id'] = newId
-    return jsonify(WhiskeyDAO.create(whiskeys))
+    return jsonify(WhiskeyDAO.create(whiskey))
     # return "served by Create "
 
 #update
 # curl -X PUT -d "{\"Title\":\"new Title\", \"Price\":999}" -H "content-type:application/json" http://127.0.0.1:5000/whiskeys/1
-@app.route('/whiskeys/<int:id>', methods=['PUT'])
-def update(id):
-    foundWhiskeys = list(filter(lambda t: t["id"] == id, whiskeys))
-    if len(foundWhiskeys) == 0:
+@app.route('/whiskeys/<int:codenr>', methods=['PUT'])
+def update(codenr):
+    foundWhiskeys = WhiskeyDAO.findById(codenr)
+    
+    if foundWhiskeys == {}:
         return jsonify({}), 404
-    currentWhiskey = foundWhiskeys[0]
-    if 'Name' in request.json:
-        currentWhiskey['Name'] = request.json['Name']
-    if 'Distillery' in request.json:
-        currentWhiskey['Distillery'] = request.json['Distillery']
-    if 'Age' in request.json:
-        currentWhiskey['Age'] = request.json['Age']
-    if 'Price' in request.json:
-        currentWhiskey['Price'] = request.json['Price']
-    if 'Country_id' in request.json:
-        currentWhiskey['Country_id'] = request.json['Country_id']
-
-    return jsonify(currentWhiskey)
+    
+    currentWhiskey = foundWhiskeys
+   
+    if 'name' in request.json:
+        currentWhiskey['name'] = request.json['name']
+    if 'country' in request.json:
+        currentWhiskey['country'] = request.json['country']
+    if 'age' in request.json:
+        currentWhiskey['age'] = request.json['age']
+    if 'price' in request.json:
+        currentWhiskey['price'] = request.json['price']
+   
+    WhiskeyDAO.update(currentWhiskey)
+    return jsonify(foundWhiskeys)
 
 #delete
 # curl -X DELETE http://127.0.0.1:5000/whiskeys/1
-@app.route('/whiskeys/<int:id>', methods=['DELETE'])
-def delete(id):
-    foundWhiskeys = list(filter(lambda t: t["id"] == id, whiskey))
-    if len(foundWhiskeys) == 0:
-        return jsonify({}), 404
-    whiskey.remove(foundWhiskeys[0])
+@app.route('/whiskeys/<int:codenr>', methods=['DELETE'])
+def delete(codenr):
+    WhiskeyDAO.delete(codenr)
 
     return jsonify({"done":True})
-
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
