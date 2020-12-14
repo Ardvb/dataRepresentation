@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Ard's Whiskeystore </title>
+        <title>Suppliers database </title>
 
 	
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -24,29 +24,25 @@
     <body> 
 
         <div align="middle">
-
             
-            <h2><button id="showCreateButton" onclick="location.href='suppliers.html';"<button type="button" class="btn btn-secondary">Go to Suppliers Table</button></h2>
-            
+            <h2><button id="showCreateButton" onclick="location.href='index.html';"<button type="button" class="btn btn-secondary">Go to homepage with Whiskey Table</button></h2>
             
         </div>
         <br>
     
     <center>
-        <h1 style = "font-family:georgia,garamond,serif;font-size:52px;">  Ard's Whiskeystore </h1>
+        <h1 style = "font-family:georgia,garamond,serif;font-size:52px;">  Suppliers Table </h1>
         <div> 
-            <h2><button id="showCreateButton" onclick="showCreate()"<button type="button" class="btn btn-info">Add a new whiskey to the database</button></h2>
+            <h2><button id="showCreateButton" onclick="showCreate()"<button type="button" class="btn btn-info">Add a new supplier to the database</button></h2>
             
         </div>
 
         <div>
-            <table class="table" id="whiskeyTable">
+            <table class="table" id="supplierTable">
                 <tr>
-                        <th>Codenr</th>
+                        <th>Snr</th>
                         <th>Name</th>
                         <th>Country</th>
-                        <th>Age</th>
-                        <th>Price</th>
                         <th> Click to update row</th>
                         <th> Click to delete row</th>
 
@@ -57,14 +53,14 @@
         </div>
         <div id='createUpdateForm' style="display: none" >
                 <br>
-                <h2><span id="createLabel">Add</span> <span id="updateLabel">Update</span> a whiskey to the database</h2>
+                <h2><span id="createLabel">Add</span> <span id="updateLabel">Update</span> a supplier to the database</h2>
                 <br>
                 
                 <table id="createUpdateForm">
                     
                                     <tr>
-                                        <td>Codenr</td>
-                                        <td><input type="text" name="codenr"/></td>
+                                        <td>Snr</td>
+                                        <td><input type="text" name="snr"/></td>
                                     </tr>
                                      <tr>
                                         <td>Name</td> <td><input type="text" name="name"/></td>
@@ -73,10 +69,7 @@
                                         <td>Country</td> <td><input type="text" name="country"/></td>
                                     </tr>
                                     <tr>    
-                                        <td>Age</td> <td><input type="number" name="age"/></td>
-                                    </tr>
-                                    <tr>    
-                                        <td>Price</td> <td><input type="number" name="price"/></td>
+                                    
                                         
                                     </tr>
                                     
@@ -84,7 +77,7 @@
                                     
                                         <td><button id="doCreateButton" onclick="doCreate()"<button type="button" class="btn btn-info">Create</button>
                                         <td><button id="doUpdateButton" onclick="doUpdate()"<button type="button" class="btn btn-info">Update</button>
-                                        <button id="mainPageButton" onclick="history.go(0)"<button type="button" class="btn btn-warning">Back to home page</button> 
+                                        <button id="mainPageButton" onclick="history.go(0)"<button type="button" class="btn btn-warning">Back to suppliers table</button> 
                 
                                         </td>
                                       
@@ -98,7 +91,7 @@
     <script>
     function showCreate(){
         document.getElementById('showCreateButton').style.display="none"
-        document.getElementById('whiskeyTable').style.display="none"
+        document.getElementById('supplierTable').style.display="none"
         document.getElementById('createUpdateForm').style.display="block"
 
         document.getElementById('createLabel').style.display="inline"
@@ -110,12 +103,12 @@
     }
     function showViewAll(){
         document.getElementById('showCreateButton').style.display="block"
-        document.getElementById('whiskeyTable').style.display="block"
+        document.getElementById('supplierTable').style.display="block"
         document.getElementById('createUpdateForm').style.display="none"
     }
     function showUpdate(buttonElement){
         document.getElementById('showCreateButton').style.display="none"
-        document.getElementById('whiskeyTable').style.display="none"
+        document.getElementById('supplierTable').style.display="none"
         document.getElementById('createUpdateForm').style.display="block"
 
         document.getElementById('createLabel').style.display="none"
@@ -128,120 +121,106 @@
         var rowElement = buttonElement.parentNode.parentNode
         
         
-        var whiskey = getWhiskeyFromRow(rowElement)
-        populateFormWithWhiskey(whiskey)
+        var supplier = getsupplierFromRow(rowElement)
+        populateFormWithsupplier(supplier)
     }
     function doCreate(){
         var form = document.getElementById('createUpdateForm')
 
-        var whiskey = {}
+        var supplier = {}
        
-        whiskey.codenr = form.querySelector('input[name="codenr"]').value
-        whiskey.name = form.querySelector('input[name="name"]').value
-        whiskey.country = form.querySelector('input[name="country"]').value
-        whiskey.age = form.querySelector('input[name="age"]').value
-        whiskey.price = form.querySelector('input[name="price"]').value
-        console.log(JSON.stringify(whiskey))
-        createWhiskeyAjax(whiskey)
+        supplier.snr = form.querySelector('input[name="snr"]').value
+        supplier.name = form.querySelector('input[name="name"]').value
+        supplier.country = form.querySelector('input[name="country"]').value
+        console.log(JSON.stringify(supplier))
+        createsupplierAjax(supplier)
         
         
     }
     function doUpdate(){
-        var whiskey = getWhiskeyFromForm();
-        var rowElement = document.getElementById(whiskey.codenr);
-        updateWhiskeyAjax(whiskey);
-        setWhiskeyInRow(rowElement,whiskey);
+        var supplier = getsupplierFromForm();
+        var rowElement = document.getElementById(supplier.snr);
+        updatesupplierAjax(supplier);
+        setsupplierInRow(rowElement,supplier);
        
         clearForm();
         showViewAll();
     }
     function doDelete(r){
-        var tableElement = document.getElementById('whiskeyTable');
+        var tableElement = document.getElementById('supplierTable');
         var rowElement = r.parentNode.parentNode;
         var index = rowElement.rowIndex;
-        deleteWhiskeyAjax(rowElement.getAttribute("codenr"));
+        deletesupplierAjax(rowElement.getAttribute("snr"));
         tableElement.deleteRow(index);
     }
-    function addWhiskeyToTable(whiskey){
-        var tableElement = document.getElementById('whiskeyTable')
+    function addsupplierToTable(supplier){
+        var tableElement = document.getElementById('supplierTable')
         var rowElement = tableElement.insertRow(-1)
-        rowElement.setAttribute('codenr',whiskey.codenr)
+        rowElement.setAttribute('snr',supplier.snr)
         var cell1 = rowElement.insertCell(0);
-        cell1.innerHTML = whiskey.codenr
+        cell1.innerHTML = supplier.snr
         var cell2 = rowElement.insertCell(1);
-        cell2.innerHTML = whiskey.name
+        cell2.innerHTML = supplier.name
         var cell3 = rowElement.insertCell(2);
-        cell3.innerHTML = whiskey.country
+        cell3.innerHTML = supplier.country
         var cell4 = rowElement.insertCell(3);
-        cell4.innerHTML = whiskey.age
+        cell4.innerHTML = '<button onclick="showUpdate(this)">Update</button>'
         var cell5 = rowElement.insertCell(4);
-        cell5.innerHTML = whiskey.price
-        var cell6 = rowElement.insertCell(5);
-        cell6.innerHTML = '<button onclick="showUpdate(this)">Update</button>'
-        var cell7 = rowElement.insertCell(6);
-        cell7.innerHTML = '<button onclick=doDelete(this)>delete</button>'
+        cell5.innerHTML = '<button onclick=doDelete(this)>delete</button>'
 
     }
 
     function clearForm(){
         var form = document.getElementById('createUpdateForm')
 
-        form.querySelector('input[name="codenr"]').value=''
+        form.querySelector('input[name="snr"]').value=''
         form.querySelector('input[name="name"]').value=''
         form.querySelector('input[name="country"]').value=''
-        form.querySelector('input[name="age"]').value=''
-        form.querySelector('input[name="price"]').value=''
+        
     }
-    function getWhiskeyFromRow(rowElement){
-        var whiskey ={}
-        whiskey.codenr  = rowElement.getAttribute('codenr')
-        whiskey.name = rowElement.cells[1].firstChild.textContent
-        whiskey.country = rowElement.cells[2].firstChild.textContent
-        whiskey.age = parseInt(rowElement.cells[3].firstChild.textContent,10)
-        whiskey.price = parseInt(rowElement.cells[4].firstChild.textContent,10)
-        return whiskey
+    function getsupplierFromRow(rowElement){
+        var car ={}
+        supplier.snr  = rowElement.getAttribute('snr')
+        supplier.mame = rowElement.cells[1].firstChild.textContent
+        supplier.country = rowElement.cells[2].firstChild.textContent
+        return supplier
     }
-    function setWhiskeyInRow(rowElement, whiskey){
-        rowElement.cells[0].firstChild.textContent= whiskey.codenr
-        rowElement.cells[1].firstChild.textContent= whiskey.name
-        rowElement.cells[2].firstChild.textContent= whiskey.country
-        rowElement.cells[3].firstChild.textContent= whiskey.age
-        rowElement.cells[4].firstChild.textContent= whiskey.price 
+    function setsupplierInRow(rowElement, supplier){
+        rowElement.cells[0].firstChild.textContent= supplier.snr
+        rowElement.cells[1].firstChild.textContent= supplier.name
+        rowElement.cells[2].firstChild.textContent= supplier.country
 
     }
-    function populateFormWithWhiskey(whiskey){
+    function populateFormWithsupplier(supplier){
         var form = document.getElementById('createUpdateForm')
-        form.querySelector('input[name="codenr"]').value  = whiskey.codenr
-        form.querySelector('input[name="name"]').value= whiskey.name
-        form.querySelector('input[name="country"]').value= whiskey.country
-        form.querySelector('input[name="age"]').value= whiskey.age
-        form.querySelector('input[name="price"]').value= whiskey.price
+        form.querySelector('input[name="snr"]').value  = supplier.snr
+        form.querySelector('input[name="name"]').value= supplier.name
+        form.querySelector('input[name="country"]').value= supplier.country
         
-        return whiskey
+        
+        return supplier
     }
-    function getWhiskeyFromForm(){
+    function getsupplierFromForm(){
         var form = document.getElementById('createUpdateForm')
-        var whiskey = {}
-        whiskey.codenr = form.querySelector('input[name="codenr"]').value
-        whiskey.name = form.querySelector('input[name="name"]').value
-        whiskey.country = form.querySelector('input[name="country"]').value
-        whiskey.age= parseInt(form.querySelector('input[name="age"]').value,10)
-        whiskey.price= parseInt(form.querySelector('input[name="price"]').value,10)
+        var supplier = {}
+        supplier.snr = form.querySelector('input[name="snr"]').value
+        supplier.name = form.querySelector('input[name="name"]').value
+        supplier.country = form.querySelector('input[name="country"]').value
 
         
-        console.log(JSON.stringify(whiskey))
-        return whiskey
+        console.log(JSON.stringify(supplier))
+        return supplier
     }
     function getAllAjax(){
         $.ajax({
-            "url": "http://127.0.0.1:5000/whiskeys",
+            "url": "http://127.0.0.1:5000/suppliers",
             "method":"GET",
             "data":"",
             "dataType": "JSON",
             "success":function(result){
                 
-                for (whiskey of result){
-                    addWhiskeyToTable(whiskey);
+                for (supplier of result){
+                    addsupplierToTable(supplier);
                 }
                 
             },
@@ -251,19 +230,19 @@
         });
 
     }
-    function createWhiskeyAjax(whiskey){
+    function createsupplierAjax(supplier){
         
-        console.log(JSON.stringify(whiskey));
+        console.log(JSON.stringify(supplier));
         $.ajax({
-            "url": "http://127.0.0.1:5000/whiskeys",
+            "url": "http://127.0.0.1:5000/suppliers",
             "method":"POST",
-            "data":JSON.stringify(whiskey),
+            "data":JSON.stringify(supplier),
             "dataType": "JSON",
             contentType: "application/json; charset=utf-8",
             "success":function(result){
                
-                whiskey.codenr = result.codenr
-                addWhiskeyToTable(whiskey)
+                supplier.snr = result.snr
+                addsupplierToTable(supplier)
                 clearForm()
                 showViewAll()
             },
@@ -272,13 +251,13 @@
             }
         });
     }
-    function updateWhiskeyAjax(whiskey){
+    function updatesupplierAjax(supplier){
         
-        console.log(JSON.stringify(whiskey));
+        console.log(JSON.stringify(supplier));
         $.ajax({
-            "url": "http://127.0.0.1:5000/whiskeys/"+encodeURI(whiskey.codenr),
+            "url": "http://127.0.0.1:5000/suppliers/"+encodeURI(supplier.snr),
             "method":"PUT",
-            "data":JSON.stringify(whiskey),
+            "data":JSON.stringify(supplier),
             "dataType": "JSON",
             contentType: "application/json; charset=utf-8",
             "success":function(result){
@@ -290,11 +269,11 @@
             }
         });
     }
-    function deleteWhiskeyAjax(codenr){
+    function deletesupplierAjax(snr){
         
         
         $.ajax({
-            "url": "http://127.0.0.1:5000/whiskeys/"+encodeURI(codenr),
+            "url": "http://127.0.0.1:5000/suppliers/"+encodeURI(snr),
             "method":"DELETE",
             "data":"",
             "dataType": "JSON",
