@@ -22,4 +22,4 @@
 - dbconfig.py and dbconfigs.py are files to enter credentials that will subsquently be read by the DAO files and then can be used to connect to the database
 - requirements.txt contains a list of required packages that should be installed in a virtual environment in order for this server to run.
 - Two mysql files that can be ran to create the necessary databases
-- a python server rest_server.py that uses flask for allowing to make CRUD operations to the databases.
+- A python server rest_server.py that uses flask for allowing to make CRUD operations to the databases.
