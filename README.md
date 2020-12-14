@@ -7,7 +7,7 @@
 ## Getting started
 - Download [Anaconda](https://www.anaconda.com/)
 
-- Follow these steps to download this repository:
+- Follow these steps to download and run this repository:
 
 1. Go to my repository on Github: https://github.com/Ardvb/dataRepresentation
 2. Click the clone or download button.
