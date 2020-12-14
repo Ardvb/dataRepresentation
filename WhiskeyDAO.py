@@ -5,15 +5,15 @@ import dbconfig as cfg
 class WhiskeyDAO:
     db = ""
     def __init__(self):
-        self.db = mysql.connector.connect(
+        self.db = mysql.connector.connect( #Connect the database
             host = cfg.mysql["host"],
             user= cfg.mysql["username"],
             password = cfg.mysql["password"],
             database = cfg.mysql["database"]
         )
-        print ("connection made")
+        print ("connection made") #Just to check it is working
 
-    def create(self, whiskey):
+    def create(self, whiskey): #Create a new whiskey
         cursor = self.db.cursor()
         sql="insert into whiskey (codenr, name, country, age, price) values (%s, %s,%s, %s,%s)"
         values = [
@@ -27,7 +27,7 @@ class WhiskeyDAO:
         self.db.commit()
         cursor.close()
 
-    def getAll(self):
+    def getAll(self): # Show info of all whiskeys
         cursor = self.db.cursor()
         sql = 'select * from whiskey'
         cursor.execute(sql)
@@ -40,7 +40,7 @@ class WhiskeyDAO:
 
         return returnArray
 
-    def findById(self, codenr):
+    def findById(self, codenr): # Find a whiskey by entered the codenr
         cursor = self.db.cursor()
         sql = 'select * from whiskey where codenr = %s'
         values = [ codenr ]
@@ -49,7 +49,7 @@ class WhiskeyDAO:
         return self.convertToDict(result)
         
 
-    def update(self, whiskey):
+    def update(self, whiskey): # Update info of certain whiskey with selected codenr
        cursor = self.db.cursor()
        sql = "update whiskey set name = %s, country = %s, age = %s, price = %s where codenr = %s"
        values = (
@@ -66,7 +66,7 @@ class WhiskeyDAO:
       
        
 
-    def delete(self, codenr):
+    def delete(self, codenr): # Delete whiskey with selected codenr
        cursor = self.db.cursor()
        sql = 'delete from whiskey where codenr = %s'
        values = [codenr]
@@ -75,7 +75,7 @@ class WhiskeyDAO:
        return {}
 
 
-    def convertToDict(self, result):
+    def convertToDict(self, result): # convert whiskey into JSON dictionary
         colnames = ["codenr", "name", "country", "age", "price"]
         whiskey = {}
 

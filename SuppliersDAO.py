@@ -5,15 +5,15 @@ import dbconfigs as cfg
 class SuppliersDAO:
     db = ""
     def __init__(self):
-        self.db = mysql.connector.connect(
+        self.db = mysql.connector.connect( #Connect the database
             host = cfg.mysql["host"],
             user= cfg.mysql["username"],
             password = cfg.mysql["password"],
             database = cfg.mysql["database"]
         )
-        print ("connection made")
+        print ("connection made") #Just to make sure it is working
 
-    def create(self, supplier):
+    def create(self, supplier): #Create a new supplier
         cursor = self.db.cursor()
         sql="insert into supplier (snr, name, country) values (%s, %s,%s)"
         values = [
@@ -26,7 +26,7 @@ class SuppliersDAO:
         self.db.commit()
         cursor.close()
 
-    def getAll(self):
+    def getAll(self): # Show info of all suppliers
         cursor = self.db.cursor()
         sql = 'select * from supplier'
         cursor.execute(sql)
@@ -39,7 +39,7 @@ class SuppliersDAO:
 
         return returnArray
 
-    def findById(self, snr):
+    def findById(self, snr): # Find a supplier by entered the codenr
         cursor = self.db.cursor()
         sql = 'select * from supplier where snr = %s'
         values = [ snr ]
@@ -48,7 +48,7 @@ class SuppliersDAO:
         return self.convertToDict(result)
         
 
-    def update(self, supplier):
+    def update(self, supplier): # Update info of certain supplier with selected codenr
        cursor = self.db.cursor()
        sql = "update supplier set name = %s, country = %s where snr = %s"
        values = (
@@ -63,7 +63,7 @@ class SuppliersDAO:
       
        
 
-    def delete(self, snr):
+    def delete(self, snr): # Delete supplier with selected codenr
        cursor = self.db.cursor()
        sql = 'delete from supplier where snr = %s'
        values = [snr]
@@ -72,7 +72,7 @@ class SuppliersDAO:
        return {}
 
 
-    def convertToDict(self, result):
+    def convertToDict(self, result): # convert supplier into JSON dictionary
         colnames = ["snr", "name", "country"]
         supplier = {}
 

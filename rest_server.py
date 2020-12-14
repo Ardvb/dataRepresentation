@@ -5,22 +5,23 @@ from SuppliersDAO import SuppliersDAO
 app = Flask(__name__, static_url_path='', static_folder='staticpages')
 
 
-@app.route('/')
+@app.route('/') # Message for root
 def index():
     return "Hi there"
-#get all
+
+# get all whiskeys
 @app.route('/whiskeys')
 def getAll():
     results = WhiskeyDAO.getAll()
     return jsonify(results)
+
 # find By id (codenr)
 @app.route('/whiskeys/<codenr>')
 def findById(codenr):
     foundWhiskey = WhiskeyDAO.findById(codenr)
     return jsonify(foundWhiskey)
 
-# create
-# curl -X POST -d "{\"Title\":\"test\", \"Author\":\"some guy\", \"Price\":123}" http://127.0.0.1:5000/whiskeys
+# create whiskey
 @app.route('/whiskeys', methods=['POST'])
 def create():
     
@@ -35,14 +36,11 @@ def create():
         "price": request.json["price"]
     }
     
-    #values =(whiskeys['name'],whiskeys['distillery'],whiskeys["age"], whiskeys["price"], whiskeys["country_id"])
-    #newId = WhiskeyDAO.create(values)
-    #whiskeys['id'] = newId
     return jsonify(WhiskeyDAO.create(whiskey))
-    # return "served by Create "
+    
 
-#update
-# curl -X PUT -d "{\"Title\":\"new Title\", \"Price\":999}" -H "content-type:application/json" http://127.0.0.1:5000/whiskeys/1
+# update whiskey
+
 @app.route('/whiskeys/<codenr>', methods=['PUT'])
 def update(codenr):
     foundWhiskeys = WhiskeyDAO.findById(codenr)
@@ -64,7 +62,7 @@ def update(codenr):
     WhiskeyDAO.update(currentWhiskey)
     return jsonify(foundWhiskeys)
 
-#delete
+# delete whiskey
 # curl -X DELETE http://127.0.0.1:5000/whiskeys/1
 @app.route('/whiskeys/<codenr>', methods=['DELETE'])
 def delete(codenr):
@@ -72,19 +70,20 @@ def delete(codenr):
 
     return jsonify({"done":True})
     
-#get all
+# get all suppliers
 @app.route('/suppliers')
 def getAlls():
     results = SuppliersDAO.getAll()
     return jsonify(results)
+
 # find By id (snr)
 @app.route('/suppliers/<snr>')
 def findByIds(snr):
     foundSupplier =SuppliersDAO.findById(snr)
     return jsonify(foundSupplier)
 
-# create
-# curl -X POST -d "{\"Title\":\"test\", \"Author\":\"some guy\", \"Price\":123}" http://127.0.0.1:5000/whiskeys
+# create supplier
+
 @app.route('/suppliers', methods=['POST'])
 def creates():
     
@@ -97,14 +96,11 @@ def creates():
         "country": request.json["country"]
     }
     
-    #values =(whiskeys['name'],whiskeys['distillery'],whiskeys["age"], whiskeys["price"], whiskeys["country_id"])
-    #newId = WhiskeyDAO.create(values)
-    #whiskeys['id'] = newId
     return jsonify(SuppliersDAO.create(supplier))
-    # return "served by Create "
+   
 
-#update
-# curl -X PUT -d "{\"Title\":\"new Title\", \"Price\":999}" -H "content-type:application/json" http://127.0.0.1:5000/whiskeys/1
+# update supplier
+
 @app.route('/suppliers/<snr>', methods=['PUT'])
 def updates(snr):
     foundSuppliers = SuppliersDAO.findById(snr)
@@ -122,20 +118,20 @@ def updates(snr):
     SuppliersDAO.update(currentSupplier)
     return jsonify(foundSuppliers)
 
-#delete
-# curl -X DELETE http://127.0.0.1:5000/whiskeys/1
+# delete supplier
+
 @app.route('/suppliers/<snr>', methods=['DELETE'])
 def deletes(snr):
     SuppliersDAO.delete(snr)
 
     return jsonify({"done":True})
     
-#error handling
+# error message
 @app.errorhandler(404)
 def not_found404(error):
     return make_response( jsonify( {'error':'Not found' }), 404)
 
-#error handling
+# error message
 @app.errorhandler(400)
 def not_found400(error):
     return make_response( jsonify( {'error':'Bad Request' }), 400)

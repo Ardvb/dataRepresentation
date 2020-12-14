@@ -1,7 +1,9 @@
 mysql= {
     "host": "localhost",
     "username": "root",
-    "password": "Nedujwopse1995",
+    "password": "",
     "database": "suppliers"
 
 }
+
+# Change these values to your own

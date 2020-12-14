@@ -2,7 +2,7 @@
     <head>
         <title>Suppliers database </title>
 
-	
+        <!-- Adapted from lecture - https://github.com/andrewbeattycourseware/dataRepresenation2020/blob/master/code/week09-server1linktoDB.py/bookviewer.html -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
        
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -16,7 +16,6 @@
             background-image: url("https://images.pexels.com/photos/19670/pexels-photo.jpg?cs=srgb&dl=pexels-miguel-%C3%A1-padri%C3%B1%C3%A1n-19670.jpg&fm=jpg");
         }
         
-        
 
     </style>
 
@@ -25,19 +24,21 @@
 
         <div align="middle">
             
-            <h2><button id="showCreateButton" onclick="location.href='index.html';"<button type="button" class="btn btn-secondary">Go to homepage with Whiskey Table</button></h2>
+            <h2><button id="Changepage" onclick="location.href='index.html';"<button type="button" class="btn btn-secondary">Go to homepage with Whiskey Table</button></h2>
             
         </div>
         <br>
     
     <center>
+        <!-- Header for index.html page -->
         <h1 style = "font-family:georgia,garamond,serif;font-size:52px;">  Suppliers Table </h1>
+        <!-- Create button that the user can click to create a new supplier to the table, when clicked the showcreate function will be called and the create form displayed-->
         <div> 
             <h2><button id="showCreateButton" onclick="showCreate()"<button type="button" class="btn btn-info">Add a new supplier to the database</button></h2>
             
         </div>
 
-        <div>
+        <div> <!-- setting table headings -->
             <table class="table" id="supplierTable">
                 <tr>
                         <th>Snr</th>
@@ -50,12 +51,13 @@
                 </tr>
                 
             </table>
-        </div>
+        </div>  <!-- div that will be displayed when the user decides to create a new supplier -->
+        <!-- display set to none by default, when create button is clicked form will be shown -->
         <div id='createUpdateForm' style="display: none" >
                 <br>
                 <h2><span id="createLabel">Add</span> <span id="updateLabel">Update</span> a supplier to the database</h2>
                 <br>
-                
+                <!-- snr, name and country input boxes for user to fill out -->
                 <table id="createUpdateForm">
                     
                                     <tr>
@@ -76,8 +78,8 @@
                                     <tr>
                                     
                                         <td><button id="doCreateButton" onclick="doCreate()"<button type="button" class="btn btn-info">Create</button>
-                                        <td><button id="doUpdateButton" onclick="doUpdate()"<button type="button" class="btn btn-info">Update</button>
-                                        <button id="mainPageButton" onclick="history.go(0)"<button type="button" class="btn btn-warning">Back to suppliers table</button> 
+                                        <td><button id="doUpdateButton" onclick="doUpdate()"<button type="button" class="btn btn-info">Update</button> <!-- button that onclick calls the doUpdate function, that will update a supplier -->
+                                        <button id="mainPageButton" onclick="history.go(0)"<button type="button" class="btn btn-warning">Back to suppliers table</button> <!-- button to return to starting page -->
                 
                                         </td>
                                       
@@ -90,7 +92,7 @@
     </body>
     <script>
     function showCreate(){
-        document.getElementById('showCreateButton').style.display="none"
+        document.getElementById('showCreateButton').style.display="none" // this function displays the new create form and the original supplier table will be hidden
         document.getElementById('supplierTable').style.display="none"
         document.getElementById('createUpdateForm').style.display="block"
 
@@ -102,12 +104,12 @@
 
     }
     function showViewAll(){
-        document.getElementById('showCreateButton').style.display="block"
+        document.getElementById('showCreateButton').style.display="block" //show all suppliers again
         document.getElementById('supplierTable').style.display="block"
         document.getElementById('createUpdateForm').style.display="none"
     }
     function showUpdate(buttonElement){
-        document.getElementById('showCreateButton').style.display="none"
+        document.getElementById('showCreateButton').style.display="none" // this function displays the update form and the original supplier table will be hidden
         document.getElementById('supplierTable').style.display="none"
         document.getElementById('createUpdateForm').style.display="block"
 
@@ -124,7 +126,7 @@
         var supplier = getsupplierFromRow(rowElement)
         populateFormWithsupplier(supplier)
     }
-    function doCreate(){
+    function doCreate(){ // this function will actually perform the creation of a new entry with the use of the Ajax function
         var form = document.getElementById('createUpdateForm')
 
         var supplier = {}
@@ -137,7 +139,7 @@
         
         
     }
-    function doUpdate(){
+    function doUpdate(){ // this function will perform the update of an instance of supplier
         var supplier = getsupplierFromForm();
         var rowElement = document.getElementById(supplier.snr);
         updatesupplierAjax(supplier);
@@ -146,16 +148,16 @@
         clearForm();
         showViewAll();
     }
-    function doDelete(r){
+    function doDelete(r){ // function to delete a supplier from the database, an Ajax delete function is called inside this function
         var tableElement = document.getElementById('supplierTable');
         var rowElement = r.parentNode.parentNode;
         var index = rowElement.rowIndex;
         deletesupplierAjax(rowElement.getAttribute("snr"));
         tableElement.deleteRow(index);
     }
-    function addsupplierToTable(supplier){
+    function addsupplierToTable(supplier){ // function to add a supplier to the table
         var tableElement = document.getElementById('supplierTable')
-        var rowElement = tableElement.insertRow(-1)
+        var rowElement = tableElement.insertRow(-1) 
         rowElement.setAttribute('snr',supplier.snr)
         var cell1 = rowElement.insertCell(0);
         cell1.innerHTML = supplier.snr
@@ -164,13 +166,13 @@
         var cell3 = rowElement.insertCell(2);
         cell3.innerHTML = supplier.country
         var cell4 = rowElement.insertCell(3);
-        cell4.innerHTML = '<button onclick="showUpdate(this)">Update</button>'
+        cell4.innerHTML = '<button onclick="showUpdate(this)">Update</button>' // Every row will have own update button
         var cell5 = rowElement.insertCell(4);
-        cell5.innerHTML = '<button onclick=doDelete(this)>delete</button>'
+        cell5.innerHTML = '<button onclick=doDelete(this)>delete</button>' // Every row will have own delete button
 
     }
 
-    function clearForm(){
+    function clearForm(){ //To clear the forms after they have been created or updated
         var form = document.getElementById('createUpdateForm')
 
         form.querySelector('input[name="snr"]').value=''
@@ -178,20 +180,20 @@
         form.querySelector('input[name="country"]').value=''
         
     }
-    function getsupplierFromRow(rowElement){
+    function getsupplierFromRow(rowElement){ //read in data form table row
         var car ={}
         supplier.snr  = rowElement.getAttribute('snr')
         supplier.mame = rowElement.cells[1].firstChild.textContent
         supplier.country = rowElement.cells[2].firstChild.textContent
         return supplier
     }
-    function setsupplierInRow(rowElement, supplier){
+    function setsupplierInRow(rowElement, supplier){ // fill table with updated data
         rowElement.cells[0].firstChild.textContent= supplier.snr
         rowElement.cells[1].firstChild.textContent= supplier.name
         rowElement.cells[2].firstChild.textContent= supplier.country
 
     }
-    function populateFormWithsupplier(supplier){
+    function populateFormWithsupplier(supplier){ // update form with supplier data
         var form = document.getElementById('createUpdateForm')
         form.querySelector('input[name="snr"]').value  = supplier.snr
         form.querySelector('input[name="name"]').value= supplier.name
@@ -200,7 +202,7 @@
         
         return supplier
     }
-    function getsupplierFromForm(){
+    function getsupplierFromForm(){ //data returned from update form
         var form = document.getElementById('createUpdateForm')
         var supplier = {}
         supplier.snr = form.querySelector('input[name="snr"]').value
@@ -211,7 +213,7 @@
         console.log(JSON.stringify(supplier))
         return supplier
     }
-    function getAllAjax(){
+    function getAllAjax(){ // Ajax call, used to get the suppliers to the server
         $.ajax({
             "url": "http://127.0.0.1:5000/suppliers",
             "method":"GET",
@@ -230,7 +232,7 @@
         });
 
     }
-    function createsupplierAjax(supplier){
+    function createsupplierAjax(supplier){ //Ajax call creating new supplier using POST
         
         console.log(JSON.stringify(supplier));
         $.ajax({
@@ -251,7 +253,7 @@
             }
         });
     }
-    function updatesupplierAjax(supplier){
+    function updatesupplierAjax(supplier){ // Ajax call updating a table entry with PUT
         
         console.log(JSON.stringify(supplier));
         $.ajax({
@@ -269,7 +271,7 @@
             }
         });
     }
-    function deletesupplierAjax(snr){
+    function deletesupplierAjax(snr){ //Ajax call to delete an instance in supplier table
         
         
         $.ajax({

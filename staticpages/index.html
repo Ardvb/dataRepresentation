@@ -2,12 +2,11 @@
     <head>
         <title>Ard's Whiskeystore </title>
 
-	
+        <!-- Adapted from lecture - https://github.com/andrewbeattycourseware/dataRepresenation2020/blob/master/code/week09-server1linktoDB.py/bookviewer.html -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
        
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         
-
     </head>
 
     <style>
@@ -17,7 +16,6 @@
         }
         
         
-
     </style>
 
 
@@ -26,20 +24,24 @@
         <div align="middle">
 
             
-            <h2><button id="showCreateButton" onclick="location.href='suppliers.html';"<button type="button" class="btn btn-secondary">Go to Suppliers Table</button></h2>
+            <h2><button id="Changepage" onclick="location.href='suppliers.html';"<button type="button" class="btn btn-secondary">Go to Suppliers Table</button></h2>
             
             
         </div>
         <br>
     
     <center>
+        <!-- Header for index.html page -->
         <h1 style = "font-family:georgia,garamond,serif;font-size:52px;">  Ard's Whiskeystore </h1>
+
+    
+        <!-- Create button that the user can click to create a new whiskey to the table, when clicked the showcreate function will be called and the create form displayed-->
         <div> 
             <h2><button id="showCreateButton" onclick="showCreate()"<button type="button" class="btn btn-info">Add a new whiskey to the database</button></h2>
             
         </div>
 
-        <div>
+        <div> <!-- setting table headings -->
             <table class="table" id="whiskeyTable">
                 <tr>
                         <th>Codenr</th>
@@ -54,12 +56,13 @@
                 </tr>
                 
             </table>
-        </div>
+        </div> <!-- div that will be displayed when the user decides to create a new whiskey -->
+        <!-- display set to none by default, when create button is clicked form will be shown -->
         <div id='createUpdateForm' style="display: none" >
                 <br>
                 <h2><span id="createLabel">Add</span> <span id="updateLabel">Update</span> a whiskey to the database</h2>
                 <br>
-                
+                <!-- codenr, name, country, age and price input boxes for user to fill out -->
                 <table id="createUpdateForm">
                     
                                     <tr>
@@ -83,8 +86,8 @@
                                     <tr>
                                     
                                         <td><button id="doCreateButton" onclick="doCreate()"<button type="button" class="btn btn-info">Create</button>
-                                        <td><button id="doUpdateButton" onclick="doUpdate()"<button type="button" class="btn btn-info">Update</button>
-                                        <button id="mainPageButton" onclick="history.go(0)"<button type="button" class="btn btn-warning">Back to home page</button> 
+                                        <td><button id="doUpdateButton" onclick="doUpdate()"<button type="button" class="btn btn-info">Update</button> <!-- button that onclick calls the doUpdate function, that will update a whiskey -->
+                                        <button id="mainPageButton" onclick="history.go(0)"<button type="button" class="btn btn-warning">Back to home page</button> <!-- button to return to starting page -->
                 
                                         </td>
                                       
@@ -95,9 +98,9 @@
         </div>
     </center>
     </body>
-    <script>
+    <script> 
     function showCreate(){
-        document.getElementById('showCreateButton').style.display="none"
+        document.getElementById('showCreateButton').style.display="none" // this function displays the new create form and the original whiskey table will be hidden
         document.getElementById('whiskeyTable').style.display="none"
         document.getElementById('createUpdateForm').style.display="block"
 
@@ -108,12 +111,12 @@
         document.getElementById('doUpdateButton').style.display="none"
 
     }
-    function showViewAll(){
+    function showViewAll(){ //show all whiskeys again
         document.getElementById('showCreateButton').style.display="block"
         document.getElementById('whiskeyTable').style.display="block"
         document.getElementById('createUpdateForm').style.display="none"
     }
-    function showUpdate(buttonElement){
+    function showUpdate(buttonElement){ // this function displays the update form and the original whiskey table will be hidden
         document.getElementById('showCreateButton').style.display="none"
         document.getElementById('whiskeyTable').style.display="none"
         document.getElementById('createUpdateForm').style.display="block"
@@ -131,7 +134,7 @@
         var whiskey = getWhiskeyFromRow(rowElement)
         populateFormWithWhiskey(whiskey)
     }
-    function doCreate(){
+    function doCreate(){ // this function will actually perform the creation of a new entry with the use of the Ajax function
         var form = document.getElementById('createUpdateForm')
 
         var whiskey = {}
@@ -146,7 +149,7 @@
         
         
     }
-    function doUpdate(){
+    function doUpdate(){ // this function will perform the update of an instance of whiskey
         var whiskey = getWhiskeyFromForm();
         var rowElement = document.getElementById(whiskey.codenr);
         updateWhiskeyAjax(whiskey);
@@ -155,14 +158,14 @@
         clearForm();
         showViewAll();
     }
-    function doDelete(r){
+    function doDelete(r){ // function to delete a whiskey from the database, an Ajax delete function is called inside this function
         var tableElement = document.getElementById('whiskeyTable');
         var rowElement = r.parentNode.parentNode;
         var index = rowElement.rowIndex;
         deleteWhiskeyAjax(rowElement.getAttribute("codenr"));
         tableElement.deleteRow(index);
     }
-    function addWhiskeyToTable(whiskey){
+    function addWhiskeyToTable(whiskey){ // function to add a whiskey to the table
         var tableElement = document.getElementById('whiskeyTable')
         var rowElement = tableElement.insertRow(-1)
         rowElement.setAttribute('codenr',whiskey.codenr)
@@ -176,14 +179,14 @@
         cell4.innerHTML = whiskey.age
         var cell5 = rowElement.insertCell(4);
         cell5.innerHTML = whiskey.price
-        var cell6 = rowElement.insertCell(5);
+        var cell6 = rowElement.insertCell(5); // Every row will have own update button
         cell6.innerHTML = '<button onclick="showUpdate(this)">Update</button>'
-        var cell7 = rowElement.insertCell(6);
+        var cell7 = rowElement.insertCell(6); // Every row will have own delete button
         cell7.innerHTML = '<button onclick=doDelete(this)>delete</button>'
 
     }
 
-    function clearForm(){
+    function clearForm(){ //To clear the forms after they have been created or updated
         var form = document.getElementById('createUpdateForm')
 
         form.querySelector('input[name="codenr"]').value=''
@@ -192,7 +195,7 @@
         form.querySelector('input[name="age"]').value=''
         form.querySelector('input[name="price"]').value=''
     }
-    function getWhiskeyFromRow(rowElement){
+    function getWhiskeyFromRow(rowElement){ //read in data form table row
         var whiskey ={}
         whiskey.codenr  = rowElement.getAttribute('codenr')
         whiskey.name = rowElement.cells[1].firstChild.textContent
@@ -201,7 +204,7 @@
         whiskey.price = parseInt(rowElement.cells[4].firstChild.textContent,10)
         return whiskey
     }
-    function setWhiskeyInRow(rowElement, whiskey){
+    function setWhiskeyInRow(rowElement, whiskey){ // fill table with updated data
         rowElement.cells[0].firstChild.textContent= whiskey.codenr
         rowElement.cells[1].firstChild.textContent= whiskey.name
         rowElement.cells[2].firstChild.textContent= whiskey.country
@@ -209,7 +212,7 @@
         rowElement.cells[4].firstChild.textContent= whiskey.price 
 
     }
-    function populateFormWithWhiskey(whiskey){
+    function populateFormWithWhiskey(whiskey){ // update form with whiskey data
         var form = document.getElementById('createUpdateForm')
         form.querySelector('input[name="codenr"]').value  = whiskey.codenr
         form.querySelector('input[name="name"]').value= whiskey.name
@@ -219,7 +222,7 @@
         
         return whiskey
     }
-    function getWhiskeyFromForm(){
+    function getWhiskeyFromForm(){ //data returned from update form
         var form = document.getElementById('createUpdateForm')
         var whiskey = {}
         whiskey.codenr = form.querySelector('input[name="codenr"]').value
@@ -232,7 +235,7 @@
         console.log(JSON.stringify(whiskey))
         return whiskey
     }
-    function getAllAjax(){
+    function getAllAjax(){ // Ajax call, used to get the whiskeys to the server
         $.ajax({
             "url": "http://127.0.0.1:5000/whiskeys",
             "method":"GET",
@@ -251,7 +254,7 @@
         });
 
     }
-    function createWhiskeyAjax(whiskey){
+    function createWhiskeyAjax(whiskey){ //Ajax call creating new whiskey using POST
         
         console.log(JSON.stringify(whiskey));
         $.ajax({
@@ -272,7 +275,7 @@
             }
         });
     }
-    function updateWhiskeyAjax(whiskey){
+    function updateWhiskeyAjax(whiskey){ // Ajax call updating a table entry with PUT
         
         console.log(JSON.stringify(whiskey));
         $.ajax({
@@ -290,7 +293,7 @@
             }
         });
     }
-    function deleteWhiskeyAjax(codenr){
+    function deleteWhiskeyAjax(codenr){ //Ajax call to delete an instance in whiskey table
         
         
         $.ajax({
